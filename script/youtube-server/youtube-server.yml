@@ -40,11 +40,6 @@
         src: ./get.py
         dest: /youtube
 
-    - name: copy list file
-      copy:
-        src: ./list.csv
-        dest: /youtube
-
     # 今のところ手動(実行長いので注意)https://qiita.com/teamhimeH/items/9910d648da0a9ff09946
     # opam init --solver=mccs
     #    opam switch create 4.09.0
@@ -56,8 +51,8 @@
       become: True
       cron:
         name: youtube dl
-        minute: "0"
-        hour: "3"
+        minute: "17"
+        hour: "0"
         job: "python3 /youtube/get.py 1 >> /youtube/log/exec.log  2>> /youtube/log/error.log"
         state: present
         user: pi

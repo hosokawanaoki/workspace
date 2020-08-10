@@ -10,7 +10,7 @@ import glob
 
 def main():
     file_remove()
-    with open(os.getcwd() + '/list.csv') as f:
+    with open(os.getcwd() + '/videos/videos/list.csv') as f:
         row_channels = csv.DictReader(f)
         channels = [row for row in row_channels]
         for channel in channels:
@@ -29,7 +29,7 @@ def file_remove():
             if file_timestamp_date < (datetime.datetime.now() - datetime.timedelta(1)):
                 os.remove(file_path)
         except ValueError:
-            raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+            raise ValueError("Incorrect data format, should be %Y-%m-%dT%H:%M:%SZ")
             
 
 def get_movies(channel):
