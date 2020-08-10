@@ -1,0 +1,57 @@
+# 接続コマンド
+# ansible-playbook -i raspi-host -u pi --ask-pass  samba.yml -vvv
+---
+- hosts: all
+  become: yes
+  remote_user: pi
+  gather_facts: no
+  tasks:
+    - name: apt update
+      apt:
+        update_cache: yes
+
+    - name: apt upgrade
+      apt:
+        upgrade: yes
+
+    - name: apt install
+      apt:
+        name:
+          - samba
+
+    - name: mkdir samba
+      file:
+        path: /samba/share
+        state: directory
+
+    - name: samba　parmission change
+      file:
+        path: /samba/
+        mode: 0777
+        recurse: yes
+
+    - name: add samba setting
+      blockinfile:
+        dest: /etc/samba/smb.conf
+        content: |
+          [share]
+          comment = Share
+          path = /samba/share
+          public = yes
+          read only = no
+          browsable = yes
+          force user = pi
+          [files]
+          comment = files
+          path = /media/pi/Elements/コンテンツ
+          public = yes
+          read only = no
+          browsable = yes
+          force user = pi
+    - name: stop service cron on debian, if running
+      systemd:
+        name: smbd
+        state: restarted
+
+    - name: reboot
+      reboot:
