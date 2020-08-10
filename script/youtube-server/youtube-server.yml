@@ -40,10 +40,10 @@
         src: ./get.py
         dest: /youtube
 
-        - name: copy list file
-        copy:
-          src: ./videos/videos/list.csv
-          dest: /youtube/videos/videos/list.csv
+    - name: copy list file
+      copy:
+        src: ./list.csv
+        dest: /youtube
 
     # 今のところ手動(実行長いので注意)https://qiita.com/teamhimeH/items/9910d648da0a9ff09946
     # opam init --solver=mccs
