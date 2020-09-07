@@ -10,18 +10,14 @@ import glob
 
 def main():
     file_remove()
-    with open(os.getcwd() + '/videos/videos/list.csv') as f:
+    with open(os.getcwd() + '/videos/list.csv') as f:
         row_channels = csv.DictReader(f)
-        channels = [row for row in row_channels]
-        for channel in channels:
-            print(channel)
-            movies = get_movies(channel)
-            for movie in movies:
-                print(movie)
-                download(movie)
+        videos = [row for row in row_channels]
+        for video in videos:
+            download(video)
 
 def file_remove():
-    files = glob.glob(os.getcwd() + '/videos/videos/*.mp4')
+    files = glob.glob(os.getcwd() + '/videos/videos/*.mp3')
     for file_path in files:
         try:
             file_timestamp_str = os.path.basename(file_path).split("|", 1)[0]
@@ -30,57 +26,21 @@ def file_remove():
                 os.remove(file_path)
         except ValueError:
             raise ValueError("Incorrect data format, should be %Y-%m-%dT%H:%M:%SZ")
-            
-
-def get_movies(channel):
-    infos = []
-    result = None
-    path_url = '%s?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=1' \
-        % (BASE_PATH, API_KEY, channel['id'])
-    tmp_url = ''
-    while True:
-        response = requests.get(path_url + tmp_url)
-        if response.status_code != 200:
-            print('error :'+ path_url + tmp_url )
-            response.raise_for_status()
-            break
-        result = response.json()
-        infos.extend(
-            [
-                {
-                    'id':item['id']['videoId'],
-                    'title':item['snippet']['title'],
-                    'desc':item['snippet']['description'],
-                    'at':item['snippet']['publishedAt']
-                }
-                for item in result['items'] if item['id']['kind'] == 'youtube#video'
-            ]
-        )
-        if 'nextPageToken' not in result.keys():
-            tmp_url = "&pageToken={result['nextPageToken']}"
-        else:
-            tmp_url = ''
-            print('正常終了')
-            break
-        time.sleep(20)
-    return infos
-
 
 def download(video):
     print("Downloading {url} start..".format(url=video['id']))
-    title = video['title'][0:50]
-    title = title.replace("_", "--")
-    datetime_at = "{title}|".format(title=title)
-    title = datetime_at + title
     opts = {
         'format': 'best[height<=720]',
-        "outtmpl": os.getcwd() + "/videos/videos/{url}.%(ext)s".format(url=title)
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+        "outtmpl": os.getcwd() + "/videos/videos/%(title)s.%(ext)s"
     }
     with youtube_dl.YoutubeDL(opts) as y:
         y.extract_info(video['id'], download=True)
         print("Downloading {url} finish!".format(url=video['id']))
-
-
 
 if __name__ == '__main__':
 
@@ -91,6 +51,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     name = args.name
 
-    BASE_PATH = 'https://www.googleapis.com/youtube/v3/search'
-    API_KEY = 'AIzaSyCp2x7rSOrP3ni4rHvyMXk6OSSozXJ8ogI'
+    # BASE_PATH = 'https://www.googleapis.com/youtube/v3/search'
+    # API_KEY = 'AIzaSyCp2x7rSOrP3ni4rHvyMXk6OSSozXJ8ogI'
     main()
