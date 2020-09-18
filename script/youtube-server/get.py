@@ -10,33 +10,30 @@ import glob
 
 def main():
     file_remove()
-    with open(os.getcwd() + '/videos/list.csv') as f:
+    with open(os.path.dirname(__file__) + '/videos/list.csv') as f:
         row_channels = csv.DictReader(f)
         videos = [row for row in row_channels]
         for video in videos:
             download(video)
 
 def file_remove():
-    files = glob.glob(os.getcwd() + '/videos/videos/*.mp3')
+    files = glob.glob(os.path.dirname(__file__) + '/videos/videos/*.mp3')
     for file_path in files:
         try:
-            file_timestamp_str = os.path.basename(file_path).split("|", 1)[0]
-            file_timestamp_date = datetime.datetime.strptime(file_timestamp_str, "%Y-%m-%dT%H:%M:%SZ")
-            if file_timestamp_date < (datetime.datetime.now() - datetime.timedelta(1)):
-                os.remove(file_path)
+            os.remove(file_path)
         except ValueError:
             raise ValueError("Incorrect data format, should be %Y-%m-%dT%H:%M:%SZ")
 
 def download(video):
     print("Downloading {url} start..".format(url=video['id']))
     opts = {
-        'format': 'best[height<=720]',
+        'format': 'worstvideo+bestaudio',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
-        "outtmpl": os.getcwd() + "/videos/videos/%(title)s.%(ext)s"
+        "outtmpl": os.path.dirname(__file__)  + "/videos/videos/%(title)s.%(ext)s"
     }
     with youtube_dl.YoutubeDL(opts) as y:
         y.extract_info(video['id'], download=True)
