@@ -10,14 +10,14 @@ import glob
 
 def main():
     file_remove()
-    with open(os.path.dirname(__file__) + '/videos/list.csv') as f:
+    with open(out_path + '/list.csv') as f:
         row_channels = csv.DictReader(f)
         videos = [row for row in row_channels]
         for video in videos:
             download(video)
 
 def file_remove():
-    files = glob.glob(os.path.dirname(__file__) + '/videos/videos/*.mp3')
+    files = glob.glob(out_path + '/*.mp3')
     for file_path in files:
         try:
             os.remove(file_path)
@@ -33,7 +33,7 @@ def download(video):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
-        "outtmpl": os.path.dirname(__file__)  + "/videos/videos/%(title)s.%(ext)s"
+        "outtmpl": out_path + "/%(title)s.%(ext)s"
     }
     with youtube_dl.YoutubeDL(opts) as y:
         y.extract_info(video['id'], download=True)
@@ -48,6 +48,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
     name = args.name
 
-    # BASE_PATH = 'https://www.googleapis.com/youtube/v3/search'
-    # API_KEY = 'AIzaSyCp2x7rSOrP3ni4rHvyMXk6OSSozXJ8ogI'
+    out_path = '/mnt/c/Users/admin/Music/walkman'
     main()
