@@ -42,8 +42,8 @@ sign in
 OAuthのbot id
 ・https://api.slack.com/apps/A01C9BC95LZ/oauth?
 ```
-export SLACK_SIGNING_SECRET=82dabc5c0b4d99111df65ca3ed33db81
-export SLACK_BOT_TOKEN=xoxb-788611353058-1398075951654-bxkuwJn9bnyrp0fV1dcvZuVz
+export SLACK_SIGNING_SECRET=xxxx
+export SLACK_BOT_TOKEN=xxxxxxxx
 ```
 
 # slackの管理コンソール
