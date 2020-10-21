@@ -9,7 +9,16 @@ from argparse import ArgumentParser
 import glob
 
 def main():
-    download()
+    file_remove()
+    with open(os.getcwd() + '/videos/videos/list.csv') as f:
+        row_channels = csv.DictReader(f)
+        channels = [row for row in row_channels]
+        for channel in channels:
+            print(channel)
+            movies = get_movies(channel)
+            for movie in movies:
+                print(movie)
+                download(movie)
 
 def file_remove():
     files = glob.glob(os.getcwd() + '/videos/videos/*.mp4')
@@ -57,13 +66,19 @@ def get_movies(channel):
     return infos
 
 
-def download():
+def download(video):
+    print("Downloading {url} start..".format(url=video['id']))
+    title = video['title'][0:50]
+    title = title.replace("_", "--")
+    datetime_at = "{title}|".format(title=title)
+    title = datetime_at + title
     opts = {
-        'playlist-items': 'best[height<=720]',
-        "outtmpl": os.getcwd() + "/videos/videos/%(id)s.%(ext)s".format(url="title")
+        'format': 'best[height<=720]',
+        "outtmpl": os.getcwd() + "/videos/videos/{url}.%(ext)s".format(url=title)
     }
     with youtube_dl.YoutubeDL(opts) as y:
-        y.extract_info("PLx7dbRz_yGZBrGd2KezFANQMv1F71UbF8", download=True) 
+        y.extract_info(video['id'], download=True)
+        print("Downloading {url} finish!".format(url=video['id']))
 
 
 
