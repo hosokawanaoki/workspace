@@ -9,12 +9,15 @@ from argparse import ArgumentParser
 import glob
 
 def main():
-    file_remove()
+    # file_remove()
     with open(out_path + '/list.csv') as f:
         row_channels = csv.DictReader(f)
         videos = [row for row in row_channels]
         for video in videos:
-            download(video)
+            try:
+                download(video)
+            except Exception as e:
+                print(e)
 
 def file_remove():
     files = glob.glob(out_path + '/*.mp3')
@@ -33,7 +36,7 @@ def download(video):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
-        "outtmpl": out_path + "/%(title)s.%(ext)s"
+        "outtmpl": out_path + "/%(title)s_%(id)s.%(ext)s"
     }
     with youtube_dl.YoutubeDL(opts) as y:
         y.extract_info(video['id'], download=True)
