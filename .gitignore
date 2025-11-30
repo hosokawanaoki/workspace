@@ -1,1 +1,19 @@
 script/youtube-server/videos/videos/【教えて！ワタナベさん】総裁選の行方～菅政権なら「二階派外し」で解散総選挙？[R2_9_5].mp3
+
+# Downloads directory
+downloads/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# uv
+.uv/
+uv.lock

@@ -1,0 +1,44 @@
+[project]
+name = "youtube-dl-tool"
+version = "0.1.0"
+description = "YouTube動画ダウンローダー（MP3変換対応）"
+readme = "readme.md"
+requires-python = ">=3.8"
+dependencies = [
+    "yt-dlp>=2024.0.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+infra = [
+    "ansible>=2.9",
+]
+
+[tool.taskipy.tasks]
+# 対話型モード（従来の動作）
+download = "python script/youtube-dl.py"
+dl = "python script/youtube-dl.py"
+
+# 音声ダウンロード（MP3）
+audio = "python script/youtube-dl.py -m audio -u"
+mp3 = "python script/youtube-dl.py -m audio -u"
+
+# 動画ダウンロード
+video = "python script/youtube-dl.py -m video -u"
+video-720p = "python script/youtube-dl.py -m video -q 720p -u"
+video-1080p = "python script/youtube-dl.py -m video -q 1080p -u"
+
+# プレイリスト
+playlist = "python script/youtube-dl.py -m playlist -u"
+
+# セットアップ
+setup = "uv sync"
+install = "uv sync"
+
+# ヘルプ
+help = "python script/youtube-dl.py --help"
+
+[tool.uv]
+dev-dependencies = [
+    "taskipy>=1.12.0",
+]
