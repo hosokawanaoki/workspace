@@ -9,6 +9,7 @@
 - [インフラ設定](#インフラ設定)
 - [スクリプト](#スクリプト)
   - [YouTube-dl（統合版）](#youtube-dl統合版)
+  - [暗号化ファイル転送ツール（Celestial API）](#暗号化ファイル転送ツールcelestial-api)
   - [Raspberry Pi自動化](#raspberry-pi自動化)
 - [前提条件](#前提条件)
 - [uv + taskipyによる開発環境](#uv--taskipyによる開発環境)
@@ -25,12 +26,19 @@
 │   │   ├── nfs.yml             # NFSサーバー構築
 │   │   ├── samba.yml           # Sambaファイル共有設定
 │   │   └── raspi-host          # Ansibleホスト定義ファイル
+│   ├── files/                  # 暗号化ファイル転送ツール
+│   │   ├── send_encrypted.py          # 暗号化メッセージ送信
+│   │   ├── send_encrypted_files.py    # 暗号化ファイル送信（ディレクトリ単位）
+│   │   └── download_encrypted_files.py # 暗号化ファイルダウンロード・復号
 │   └── youtube-server/         # YouTubeダウンロードサーバー
 │       ├── youtube-server.yml  # サーバーセットアップ用Ansible
 │       ├── get.py              # YouTube動画取得スクリプト
 │       └── get_by_playlist.py  # プレイリスト対応版
+├── product/                    # ダウンロードしたファイルの配置先
 ├── youtube-dl.py               # YouTube DL（統合版・メイン）
 ├── pyproject.toml              # uvプロジェクト設定（依存管理 + taskipy）
+├── .env                        # 環境変数（Git管理外）
+├── .env.example                # 環境変数のテンプレート
 └── readme.md                   # このファイル
 ```
 
@@ -149,6 +157,48 @@ uv run python youtube-dl.py -m audio -u "URL" -o ./my_downloads
 - `-q`, `--quality`: 品質設定
   - 動画: best, 1080p, 720p, 480p（デフォルト: best）
   - 音声: kbps値（デフォルト: 192）
+
+---
+
+### 暗号化ファイル転送ツール（Celestial API）
+
+Celestial API を使った暗号化ファイル転送ツール群です。AES-256-GCM で暗号化してファイルやメッセージを送受信します。
+
+**環境変数の設定**:
+
+```bash
+# .env.example をコピーして値を設定
+cp .env.example .env
+# .env を編集して CELESTIAL_ENCRYPTION_KEY と CELESTIAL_API_URL を設定
+```
+
+**鍵の生成（初回のみ）**:
+
+```bash
+uv run python script/files/send_encrypted.py --generate-key
+```
+
+**暗号化メッセージ送信**:
+
+```bash
+# .env を読み込んで実行
+set -a && source .env && set +a
+uv run python script/files/send_encrypted.py --sender "太郎" --message "こんにちは!"
+```
+
+**暗号化ファイル送信（ディレクトリ単位）**:
+
+```bash
+set -a && source .env && set +a
+uv run python script/files/send_encrypted_files.py --dir ./my_files --sender "太郎"
+```
+
+**暗号化ファイルダウンロード（最新を取得）**:
+
+```bash
+set -a && source .env && set +a
+uv run python script/files/download_encrypted_files.py --out ./product
+```
 
 ---
 
