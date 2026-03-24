@@ -7,7 +7,7 @@
 使い方:
     # ディレクトリを送信
     export CELESTIAL_ENCRYPTION_KEY="暗号化キー"
-    export CELESTIAL_API_URL="https://bmaxserver.tailb38d9c.ts.net:10000"
+    export CELESTIAL_API_URL="https://minipcserver.tailb38d9c.ts.net"
     python examples/send_encrypted_files.py --dir ./my_files --sender "太郎"
 
     # 鍵生成は send_encrypted.py を参照

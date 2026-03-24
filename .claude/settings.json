@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash"
+      "Bash",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 10 https://minipcserver.tailb38d9c.ts.net/)",
+      "Bash(curl -s --connect-timeout 10 https://minipcserver.tailb38d9c.ts.net/api/)",
+      "Bash(export CELESTIAL_API_URL=\"https://minipcserver.tailb38d9c.ts.net\")",
+      "Bash(.venv/bin/python script/files/send_encrypted.py --sender \"テスト\" --message \"移行先疎通テスト\")"
     ]
   }
 }

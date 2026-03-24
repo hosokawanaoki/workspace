@@ -6,7 +6,7 @@ Celestial API から最新アップロードを暗号化ダウンロードし、
 
 使い方:
     export CELESTIAL_ENCRYPTION_KEY="暗号化キー"
-    export CELESTIAL_API_URL="https://bmaxserver.tailb38d9c.ts.net:10000"
+    export CELESTIAL_API_URL="https://minipcserver.tailb38d9c.ts.net"
     python examples/download_encrypted_files.py --out ./downloaded
 
 依存関係:

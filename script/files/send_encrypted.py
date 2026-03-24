@@ -10,7 +10,7 @@ AES-256-GCM でメッセージを暗号化し、Celestial API に送信する。
 
     # メッセージを送信
     export CELESTIAL_ENCRYPTION_KEY="生成された鍵"
-    export CELESTIAL_API_URL="https://bmaxserver.tailb38d9c.ts.net:10000"
+    export CELESTIAL_API_URL="https://minipcserver.tailb38d9c.ts.net"
     python examples/send_encrypted.py --sender "太郎" --message "こんにちは!"
 
 依存関係:
